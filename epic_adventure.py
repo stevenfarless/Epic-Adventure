@@ -75,7 +75,7 @@ def fight_enemy(enemy_name, max_health, attack_damage, player):
 
     if player.health <= 0:
         print("\nYou have been defeated.")
-        return "defeat"
+        return "game_over"  # Signal game over
 
 def forest(player):
     """Handles the forest scenario and fight"""
