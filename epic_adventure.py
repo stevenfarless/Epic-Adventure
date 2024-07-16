@@ -1,7 +1,12 @@
 import random
 
-# Constants
+# Initial player health
 PLAYER_HEALTH = 100
+
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.health = PLAYER_HEALTH
 
 def intro():
     """Introduction and player name input"""
@@ -29,16 +34,14 @@ def intro():
     print("""To the WEST:
     You see a mysterious cave entrance beckoning with an eerie glow.""")
     input("[Continue]")
-    return player_name
+    return Player(player_name)
 
-def fight_enemy(enemy_name, max_health, attack_damage):
+def fight_enemy(enemy_name, max_health, attack_damage, player):
     """Simulates a fight between the player and an enemy"""
-    print(f"A wild {enemy_name} appears!")
     enemy_health = max_health
-    player_health = PLAYER_HEALTH
 
-    while enemy_health > 0 and player_health > 0:
-        print(f"Your health: {player_health}   {enemy_name}'s health: {enemy_health}")
+    while enemy_health > 0 and player.health > 0:
+        print(f"\nYour health: {player.health}   {enemy_name}'s health: {enemy_health}")
         choice = input("1. Attack   2. Defend\n")
         
         if choice == "1":
@@ -48,30 +51,33 @@ def fight_enemy(enemy_name, max_health, attack_damage):
             
             if enemy_health <= 0:
                 print(f"\nThe {enemy_name} has been defeated!\n")
+                player.health += 10  # Increase player health by 10
+                if player.health > PLAYER_HEALTH:  # Ensure player health does not exceed max
+                    player.health = PLAYER_HEALTH
                 return "victory"
             
             enemy_attack = random.randint(1, attack_damage // 2)
-            player_health -= enemy_attack
+            player.health -= enemy_attack
             print(f"The {enemy_name} attacks you and deals {enemy_attack} damage!")
             
         elif choice == "2":
             player_defense = random.randint(1, attack_damage // 3)
             enemy_attack = random.randint(1, attack_damage // 2)
             damage_taken = max(0, enemy_attack - player_defense)
-            player_health -= damage_taken
+            player.health -= damage_taken
             print(f"\nYou defend against the {enemy_name}'s attack and take {damage_taken} damage.")
             
         else:
             print("Invalid choice. The enemy takes advantage of your hesitation.")
             enemy_attack = random.randint(1, attack_damage // 2)
-            player_health -= enemy_attack
+            player.health -= enemy_attack
             print(f"The {enemy_name} attacks you and deals {enemy_attack} damage!")
 
-    if player_health <= 0:
-        print("You have been defeated.")
+    if player.health <= 0:
+        print("\nYou have been defeated.")
         return "defeat"
 
-def forest():
+def forest(player):
     """Handles the forest scenario and fight"""
     print("\nYou enter the dense forest.")
     input("[Continue]")
@@ -79,9 +85,9 @@ def forest():
     input("[Continue]")
     print("As you walk deeper, you hear rustling in the bushes.")
     input("[Continue]")
-    return fight_enemy("Bear", 50, 20)
+    return fight_enemy("Bear", 50, 20, player)
 
-def mountain():
+def mountain(player):
     """Handles the mountain scenario and fight"""
     print("You start your ascent up the steep mountain path.")
     input("[Continue]")
@@ -89,17 +95,17 @@ def mountain():
     input("[Continue]")
     print("After a challenging climb, you reach a serene mountaintop lake.")
     input("[Continue]")
-    return fight_enemy("Dragon", 80, 30)
+    return fight_enemy("Dragon", 80, 30, player)
 
-def village():
+def village(player):
     """Handles the village scenario and fight"""
     print("You head towards the distant village, following the smoke.")
     input("[Continue]")
     print("As you approach, you notice the village is under attack by bandits!")
     input("[Continue]")
-    return fight_enemy("Bandit Leader", 60, 25)
+    return fight_enemy("Bandit Leader", 60, 25, player)
 
-def cave():
+def cave(player):
     """Handles the cave scenario and fight"""
     print("\nYou enter the mysterious cave.")
     input("[Continue]")
@@ -107,11 +113,11 @@ def cave():
     input("[Continue]")
     print("As you venture deeper, you notice glowing crystals illuminating the path.")
     input("[Continue]")
-    return fight_enemy("Cave Troll", 100, 35)
+    return fight_enemy("Cave Troll", 100, 35, player)
 
 def main():
     """Main function to drive the game"""
-    player_name = intro()
+    player = intro()
     print("\nYou set off on your epic adventure!\n")
     input("[Continue]")
     
@@ -126,11 +132,12 @@ def main():
 
     while True:
         if len(defeated_enemies) == 4:
+            input("Press ENTER to continue")
             print("\n" * 3)
             print("*" * 68)
             print("*" * 68)
             print("*" * 68)
-            print(f"**************** Congratulations {player_name}!!! *******************")
+            print(f"**************** Congratulations {player.name}!!! *******************")
             print("You have defeated all the enemies and completed the epic adventure!")
             print("*" * 68)
             print("*" * 68)
@@ -148,7 +155,7 @@ def main():
                 print("Choose another direction.")
                 continue
             else:
-                result = location_function()
+                result = location_function(player)
                 if result == "victory":
                     defeated_enemies.append(direction)
                 elif result == "game_over":
