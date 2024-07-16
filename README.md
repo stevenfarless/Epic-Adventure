@@ -22,13 +22,13 @@ In this text-based adventure game, you, the player, will navigate through differ
 
 To run the game locally:
 
-1. Clone this repository:
+1. Clone this repository:\
 git clone https://github.com/Fuddledumpy/epic-adventure.git
 
-2. Navigate into the project directory:
+2. Navigate into the project directory:\
 cd epic-adventure
 
-3. Run the game:
+4. Run the game:\
 python epic-adventure.py
 
 
