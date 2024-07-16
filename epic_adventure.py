@@ -142,6 +142,7 @@ def main():
             print("*" * 68)
             print("*" * 68)
             print("*" * 68)
+            input("Press ENTER to end the game.")
             break
         
         direction = input("Which direction will you choose? (North / East / South / West)\n").lower()
