@@ -1,19 +1,38 @@
-import time
 import random
 
+# Constants
 PLAYER_HEALTH = 100
 
 def intro():
+    """Introduction and player name input"""
     print("""
-    Welcome to the Epic Adventure!
-    You find yourself at a crossroads...
-    To the north, a dense forest stretches as far as the eye can see.
-    To the east, there's a narrow path leading up a steep mountain.
-    To the south, you can see smoke rising from a distant village.
-    To the west, a mysterious cave entrance beckons with an eerie glow.
+    ********************************************************************************
+    ********************************************************************************
+    ************************ Welcome to the Epic Adventure! ************************
+    ********************************************************************************
+    ********************************************************************************
     """)
+    input("Press Enter to continue...")
+    player_name = input("What is your name? ")
+
+    print(f"\nHello, {player_name}. You find yourself at a crossroads.\n")
+    input("[Continue]")
+    print("""To the NORTH:
+    You see a dense forest stretching as far as the eye can see.""")
+    input("[Continue]")
+    print("""To the EAST:
+    You see a narrow path leading up a steep mountain.""")
+    input("[Continue]")
+    print("""To the SOUTH:
+    You see smoke rising from a distant village.""")
+    input("[Continue]")
+    print("""To the WEST:
+    You see a mysterious cave entrance beckoning with an eerie glow.""")
+    input("[Continue]")
+    return player_name
 
 def fight_enemy(enemy_name, max_health, attack_damage):
+    """Simulates a fight between the player and an enemy"""
     print(f"A wild {enemy_name} appears!")
     enemy_health = max_health
     player_health = PLAYER_HEALTH
@@ -43,49 +62,58 @@ def fight_enemy(enemy_name, max_health, attack_damage):
             print(f"\nYou defend against the {enemy_name}'s attack and take {damage_taken} damage.")
             
         else:
-            print("Invalid choice. The enemy takes advantage of your hesitation...")
+            print("Invalid choice. The enemy takes advantage of your hesitation.")
             enemy_attack = random.randint(1, attack_damage // 2)
             player_health -= enemy_attack
             print(f"The {enemy_name} attacks you and deals {enemy_attack} damage!")
 
     if player_health <= 0:
-        print("You have been defeated...")
+        print("You have been defeated.")
         return "defeat"
 
 def forest():
-    print("""
-    You enter the dense forest...
-    The air is thick with the scent of pine and damp earth.
-    As you walk deeper, you hear rustling in the bushes.
-    """)
+    """Handles the forest scenario and fight"""
+    print("\nYou enter the dense forest.")
+    input("[Continue]")
+    print("The air is thick with the scent of pine and damp earth.")
+    input("[Continue]")
+    print("As you walk deeper, you hear rustling in the bushes.")
+    input("[Continue]")
     return fight_enemy("Bear", 50, 20)
 
 def mountain():
-    print("""
-    You start your ascent up the steep mountain path...
-    The higher you climb, the more breathtaking the view becomes.
-    After a challenging climb, you reach a serene mountaintop lake.
-    """)
+    """Handles the mountain scenario and fight"""
+    print("You start your ascent up the steep mountain path.")
+    input("[Continue]")
+    print("The higher you climb, the more breathtaking the view becomes.")
+    input("[Continue]")
+    print("After a challenging climb, you reach a serene mountaintop lake.")
+    input("[Continue]")
     return fight_enemy("Dragon", 80, 30)
 
 def village():
-    print("""
-    You head towards the distant village, following the smoke...
-    As you approach, you notice the village is under attack by bandits!
-    """)
+    """Handles the village scenario and fight"""
+    print("You head towards the distant village, following the smoke.")
+    input("[Continue]")
+    print("As you approach, you notice the village is under attack by bandits!")
+    input("[Continue]")
     return fight_enemy("Bandit Leader", 60, 25)
 
 def cave():
-    print("""
-    You enter the mysterious cave...
-    The air is cool and damp, with faint echoes bouncing off the walls.
-    As you venture deeper, you notice glowing crystals illuminating the path.
-    """)
+    """Handles the cave scenario and fight"""
+    print("\nYou enter the mysterious cave.")
+    input("[Continue]")
+    print("The air is cool and damp, with faint echoes bouncing off the walls.")
+    input("[Continue]")
+    print("As you venture deeper, you notice glowing crystals illuminating the path.")
+    input("[Continue]")
     return fight_enemy("Cave Troll", 100, 35)
 
 def main():
-    intro()
-    print("You set off on your epic adventure...\n")
+    """Main function to drive the game"""
+    player_name = intro()
+    print("\nYou set off on your epic adventure!\n")
+    input("[Continue]")
     
     directions = {
         "north": ("Bear", forest),
@@ -102,7 +130,7 @@ def main():
             print("*" * 68)
             print("*" * 68)
             print("*" * 68)
-            print("************************ Congratulations!!! ************************")
+            print(f"**************** Congratulations {player_name}!!! *******************")
             print("You have defeated all the enemies and completed the epic adventure!")
             print("*" * 68)
             print("*" * 68)
@@ -115,7 +143,8 @@ def main():
             enemy_name, location_function = directions[direction]
             
             if direction in defeated_enemies:
-                print(f"You have already defeated the {enemy_name} in this direction.")
+                print(f"\nYou have already defeated the {enemy_name}.\n")
+                input("[Continue]")
                 print("Choose another direction.")
                 continue
             else:
