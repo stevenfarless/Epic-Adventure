@@ -97,9 +97,9 @@ def main():
     }
     scenarios = {
         "north": "\nYou enter the dense forest.\nThe air is thick with the scent of pine and damp earth.\nAs you walk deeper, you hear rustling in the bushes.\nYou try to ignore it and decide to keep walking.\nBefore you can take another step, out lunges a wild bear!\nIt's hungry as heck and you look delicious!\n",
-        "east": "\nYou head towards the distant village, following the smoke.\nAs you approach, you notice the village is under attack by bandits!\n",
+        "east": "\nAs you head towards the distant village,\nfollowing the trail of smoke, you notice something alarming:\nthe village is under attack by a group of bandits!\nTheir leader gestures to his gang, and they quickly encircle you both.\nTheir chants of 'FIGHT! FIGHT! FIGHT!' echo through the air.",
         "south": "\nYou enter the mysterious cave.\nThe air is cool and damp, with faint echoes bouncing off the walls.\nAs you venture deeper, you notice glowing crystals illuminating the path.\n",
-        "west": "\nYou start your ascent up the steep mountain path.\nThe higher you climb, the more breathtaking the view becomes.\nAfter a challenging climb, you reach a serene mountaintop lake.\n",
+        "west": "\nYou start your ascent up the steep mountain path.\nThe higher you climb, the more breathtaking the view becomes.\nAfter a challenging climb, you reach a serene mountaintop lake.\n\nThe air grows suddenly cold.\nThe wind picks up, carrying a bone-chilling roar that echoes through the peaks. Your heart pounds as a colossal shadow blots out the sun. With a thunderous crash, a dragon descends from the swirling clouds, its scales gleaming ominously. Its piercing eyes lock onto you, and its wings cast a dark shadow over the lake. The ground trembles beneath its massive claws as it emits a low, rumbling growl.\n\nYou ready your weapon",
     }
     defeated_enemies = []
     while True:
