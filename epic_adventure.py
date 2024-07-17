@@ -112,7 +112,10 @@ def main():
             if result == "victory":
                 defeated_enemies.append(direction)
             elif result == "game_over":
-                print("Unfortunately, your adventure has come to an end.")
+                print("Unfortunately, your adventure has come to an end.\n")
+                input("Press ENTER to die.")
+                print("x_x You died.\n")
+                input("Exit")
                 break
 
 if __name__ == "__main__":
