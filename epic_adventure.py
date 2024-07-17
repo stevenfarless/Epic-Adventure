@@ -32,6 +32,7 @@ def fight_enemy(enemy, player):
             print(f"\nYou attack the {enemy.name} and deal {player_attack} damage!")
             if enemy_health <= 0:
                 print(f"\nThe {enemy.name} has been defeated!\n")
+                input("[Continue]")
                 player.health = min(player.health + 10, MAX_HEALTH)
                 return "victory"
             player.health -= random.randint(MIN_DAMAGE, enemy.attack_damage // 2)
@@ -44,7 +45,30 @@ def fight_enemy(enemy, player):
 def scenario(player, enemy, scenario_text):
     print(scenario_text)
     input("[Continue]")
-    return fight_enemy(enemy, player)
+    result = fight_enemy(enemy, player)
+    
+    print("")
+    if result == "victory":
+        if enemy.name == "Dragon":
+            print("Filled with adrenaline from defeating the dragon, you continue your journey.\n")
+        elif enemy.name == "Cave Troll":
+            print("The defeated troll slumps to the ground, allowing you to proceed deeper into the cave.\n")
+        elif enemy.name == "Bear":
+            print("Feeling triumphant after defeating the bear, you continue your journey.\n")
+        elif enemy.name == "Bandit Leader":
+            print("With the bandit leader defeated, the villagers thank you and you continue your journey.\n")
+        return "victory"
+    else:
+        if enemy.name == "Dragon":
+            print("The dragon's fire overwhelms you, and you retreat from the mountain...\n")
+        elif enemy.name == "Cave Troll":
+            print("The troll's brute strength overwhelms you, and you retreat from the cave...\n")
+        elif enemy.name == "Bear":
+            print("The bear's attack overwhelms you, and you retreat from the forest...\n")
+        else:
+            print("The dragon's fire overwhelms you, and you retreat from the mountain...\n")
+        input("[Continue]")
+        return "game_over"
 
 def main():
     print("""
@@ -58,22 +82,18 @@ def main():
     
     player = Player(input("\nWhat is your name? "))
     
-    print(f"\nHello {player.name}.\nYou find yourself suddenly teleported to an unfamiliar crossroad surrounded by four different paths.\n")
-    input("[Continue]")
+    print(f"\nHello {player.name}.\n\nYou find yourself suddenly teleported to an unfamiliar crossroad surrounded by four different paths.\n")
     print("""To the North:\tYou see a dense forest stretching as far as the eye can see.""")
-    # input("[Continue]")
     print("""To the East:\tYou see smoke rising from a distant village.""")
-    # input("[Continue]")
     print("""To the South:\tYou see a mysterious cave entrance beckoning with an eerie glow.""")
-    # input("[Continue]")
     print("""To the West:\tYou see a narrow path leading up a steep mountain.\n""")
     input("[Continue]")
     
     enemies = {
         "north": Enemy("Bear", 50, 20),
         "east": Enemy("Bandit Leader", 65, 30),
-        "south": Enemy("Cave Troll", 85, 25),
-        "west": Enemy("Dragon", 100, 35)
+        "south": Enemy("Cave Troll", 85, 40),
+        "west": Enemy("Dragon", 100, 50)
     }
     scenarios = {
         "north": "\nYou enter the dense forest.\nThe air is thick with the scent of pine and damp earth.\nAs you walk deeper, you hear rustling in the bushes.\nYou try to ignore it and decide to keep walking.\nBefore you can take another step, out lunges a wild bear!\nIt's hungry as heck and you look delicious!\n",
