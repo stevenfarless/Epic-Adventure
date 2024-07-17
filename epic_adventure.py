@@ -58,19 +58,15 @@ def main():
     
     player = Player(input("\nWhat is your name? "))
     
-    print(f"\nHello {player.name}.\nYou find yourself suddenly teleported to an unfamiliar crossroad surrounded by four different paths.")
+    print(f"\nHello {player.name}.\nYou find yourself suddenly teleported to an unfamiliar crossroad surrounded by four different paths.\n")
     input("[Continue]")
-    print("""To the North:
-    You see a dense forest stretching as far as the eye can see.""")
+    print("""To the North:\tYou see a dense forest stretching as far as the eye can see.""")
     # input("[Continue]")
-    print("""To the East:
-    You see smoke rising from a distant village.""")
+    print("""To the East:\tYou see smoke rising from a distant village.""")
     # input("[Continue]")
-    print("""To the South:
-    You see a mysterious cave entrance beckoning with an eerie glow.""")
+    print("""To the South:\tYou see a mysterious cave entrance beckoning with an eerie glow.""")
     # input("[Continue]")
-    print("""To the West:
-    You see a narrow path leading up a steep mountain.""")
+    print("""To the West:\tYou see a narrow path leading up a steep mountain.\n""")
     input("[Continue]")
     
     enemies = {
@@ -80,10 +76,10 @@ def main():
         "west": Enemy("Dragon", 100, 35)
     }
     scenarios = {
-        "north": "\nYou enter the dense forest.\nThe air is thick with the scent of pine and damp earth.\nAs you walk deeper, you hear rustling in the bushes.\nYou try to ignore it and decide to keep walking.\nBefore you can take another step, out lunges a wild bear!\nIt's hungry as heck and you look delicious!",
-        "east": "\nYou head towards the distant village, following the smoke.\nAs you approach, you notice the village is under attack by bandits!",
-        "south": "\nYou enter the mysterious cave.\nThe air is cool and damp, with faint echoes bouncing off the walls.\nAs you venture deeper, you notice glowing crystals illuminating the path.",
-        "West": "\nYou start your ascent up the steep mountain path.\nThe higher you climb, the more breathtaking the view becomes.\nAfter a challenging climb, you reach a serene mountaintop lake.",
+        "north": "\nYou enter the dense forest.\nThe air is thick with the scent of pine and damp earth.\nAs you walk deeper, you hear rustling in the bushes.\nYou try to ignore it and decide to keep walking.\nBefore you can take another step, out lunges a wild bear!\nIt's hungry as heck and you look delicious!\n",
+        "east": "\nYou head towards the distant village, following the smoke.\nAs you approach, you notice the village is under attack by bandits!\n",
+        "south": "\nYou enter the mysterious cave.\nThe air is cool and damp, with faint echoes bouncing off the walls.\nAs you venture deeper, you notice glowing crystals illuminating the path.\n",
+        "west": "\nYou start your ascent up the steep mountain path.\nThe higher you climb, the more breathtaking the view becomes.\nAfter a challenging climb, you reach a serene mountaintop lake.\n",
     }
     defeated_enemies = []
     while True:
