@@ -1,7 +1,7 @@
 import random
 
 MAX_HEALTH = 100
-MIN_DAMAGE = 1
+MIN_DAMAGE = 5
 
 class Player:
     def __init__(self, name):
@@ -31,7 +31,7 @@ def fight_enemy(enemy, player):
             enemy_health -= player_attack
             print(f"\nYou attack the {enemy.name} and deal {player_attack} damage!")
             if enemy_health <= 0:
-                print(f"\nThe {enemy.name} has been defeated!\n")
+                print(f"\nThe {enemy.name} has been defeated! You rest and gain 10 health!\n")
                 input("[Continue]")
                 player.health = min(player.health + 10, MAX_HEALTH)
                 return "victory"
@@ -65,7 +65,7 @@ def scenario(player, enemy, scenario_text):
             print("The troll's brute strength overwhelms you, and you retreat from the cave...\n")
         elif enemy.name == "Bear":
             print("The bear's attack overwhelms you, and you retreat from the forest...\n")
-        else:
+        elif enemy.name == "Bandit Leader":
             print("The dragon's fire overwhelms you, and you retreat from the mountain...\n")
         input("[Continue]")
         return "game_over"
@@ -87,13 +87,13 @@ def main():
     print("""To the East:\tYou see smoke rising from a distant village.""")
     print("""To the South:\tYou see a mysterious cave entrance beckoning with an eerie glow.""")
     print("""To the West:\tYou see a narrow path leading up a steep mountain.\n""")
-    input("[Continue]")
+    # input("[Continue]")
     
     enemies = {
         "north": Enemy("Bear", 50, 20),
         "east": Enemy("Bandit Leader", 65, 30),
         "south": Enemy("Cave Troll", 85, 40),
-        "west": Enemy("Dragon", 100, 50)
+        "west": Enemy("Dragon", 200, 75)
     }
     scenarios = {
         "north": "\nYou enter the dense forest.\nThe air is thick with the scent of pine and damp earth.\nAs you walk deeper, you hear rustling in the bushes.\nYou try to ignore it and decide to keep walking.\nBefore you can take another step, out lunges a wild bear!\nIt's hungry as heck and you look delicious!\n",
