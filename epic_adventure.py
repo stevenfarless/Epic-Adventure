@@ -16,7 +16,7 @@ class Enemy:
 
 def validate_input(prompt, valid_inputs):
     while True:
-        choice = input(prompt).lower()
+        choice = input(prompt).strip().lower()
         if choice in valid_inputs:
             return choice
         print("Invalid input. Please try again.")
@@ -26,21 +26,37 @@ def fight_enemy(enemy, player):
     while enemy_health > 0 and player.health > 0:
         print(f"\n{player.name}'s health:\t{player.health}\n{enemy.name}'s health:\t{enemy_health}")
         choice = validate_input("1. Attack   2. Defend\n", ["1", "2"])
+        
         if choice == "1":
-            player_attack = random.randint(enemy.attack_damage // 2, enemy.attack_damage)
+            player_attack = calculate_player_attack(enemy.attack_damage)
             enemy_health -= player_attack
             print(f"\nYou attack the {enemy.name} and deal {player_attack} damage!")
+            
             if enemy_health <= 0:
                 print(f"\nThe {enemy.name} has been defeated! You rest and gain 10 health!\n")
                 input("[Continue]")
                 player.health = min(player.health + 10, MAX_HEALTH)
                 return "victory"
-            player.health -= random.randint(MIN_DAMAGE, enemy.attack_damage // 2)
+            
+            player.health -= calculate_enemy_attack(MIN_DAMAGE, enemy.attack_damage)
+        
         elif choice == "2":
-            player.health -= max(0, random.randint(MIN_DAMAGE, enemy.attack_damage // 2) - random.randint(MIN_DAMAGE, enemy.attack_damage // 3))
-        else:
-            player.health -= random.randint(MIN_DAMAGE, enemy.attack_damage // 2)
-    return "game_over" if player.health <= 0 else None
+            player.health -= calculate_defend_damage(MIN_DAMAGE, enemy.attack_damage)
+        
+        # Ensure player health doesn't drop below zero unexpectedly
+        if player.health <= 0:
+            return "game_over"
+    
+    return None
+
+def calculate_player_attack(max_damage):
+    return random.randint(max_damage // 2, max_damage)
+
+def calculate_enemy_attack(min_damage, max_damage):
+    return random.randint(min_damage, max_damage // 2)
+
+def calculate_defend_damage(min_damage, max_damage):
+    return max(0, random.randint(min_damage, max_damage // 2) - random.randint(MIN_DAMAGE, max_damage // 3))
 
 def scenario(player, enemy, scenario_text):
     print(scenario_text)
@@ -80,7 +96,7 @@ def main():
     """)
     input("Press Enter to continue...")
     
-    player = Player(input("\nWhat is your name? "))
+    player = Player(input("\nWhat is your name? ").strip())
     
     print(f"\nHello {player.name}.\n\nYou find yourself suddenly teleported to an unfamiliar crossroad surrounded by four different paths.\n")
     print("""To the North:\tYou see a dense forest stretching as far as the eye can see.""")
