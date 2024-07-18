@@ -123,7 +123,7 @@ def main():
     defeated_enemies = []
     while True:
         if len(defeated_enemies) == len(enemies):
-            print(f"\nCongratulations {player.name}!!! You have defeated all the enemies and completed the epic adventure!")
+            print(f"\nCongratulations {player.name}!!! You have defeated all the enemies and completed the epic adventure!\n")
             input("Press ENTER to end game and get back to your life, loser.")
             break
         direction = validate_input("Which direction will you choose? (North / East / South / West)\n", enemies.keys())
