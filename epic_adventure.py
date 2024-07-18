@@ -2,6 +2,7 @@ import random
 
 MAX_HEALTH = 100
 MIN_DAMAGE = 5
+HEALTH_GAIN = 10
 
 class Player:
     def __init__(self, name):
@@ -33,9 +34,9 @@ def fight_enemy(enemy, player):
             print(f"\nYou attack the {enemy.name} and deal {player_attack} damage!")
             
             if enemy_health <= 0:
-                print(f"\nThe {enemy.name} has been defeated! You rest and gain 10 health!\n")
+                print(f"\nThe {enemy.name} has been defeated! You rest and gain {HEALTH_GAIN} health!\n")
                 input("[Continue]")
-                player.health = min(player.health + 10, MAX_HEALTH)
+                player.health = min(player.health + HEALTH_GAIN, MAX_HEALTH)
                 return "victory"
             
             player.health -= calculate_enemy_attack(MIN_DAMAGE, enemy.attack_damage)
