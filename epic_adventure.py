@@ -81,7 +81,7 @@ def scenario(player, enemy, scenario_text):
             print("The troll's brute strength overwhelms you.\nYou attempt to retreat from the cave to die in peace, but you are trapped.\nYour bones join the pile of hundreds of other stupid...\nI mean...\nbrave...\nadventurers.")
         elif enemy.name == "Bear":
             print("The bear's attack overwhelms you.\nYou hear the bear say a prayer, thanking his bear deity for this delicious feast.\n")
-            input("[Press ENTER to say 'Amen']")
+            input("[Press ENTER to say 'Amen' with the bear]")
             print("You can't talk. The bear ripped your throat out.\n\tBummer.")
         elif enemy.name == "Bandit Leader":
             print("The bandit leader lands his final blow. The bandits fight over who gets to keep your sweet loot.\nYou try to get up and retreat, but the bandits stole your feet.")
