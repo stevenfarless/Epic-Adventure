@@ -8,9 +8,8 @@ In this text-based adventure game, you, the player, will navigate through differ
 
 ## Features
 
-- **Dynamic Gameplay:** Choose your path—north, east, south, or west—and face different enemies.
-- **Combat System:** Engage in turn-based combat where strategy and quick decision-making are crucial.
-- **Health Regeneration:** After defeating enemies, your health regenerates by 10 points after resting, allowing you to endure through multiple battles.
+- **Dynamic Gameplay:** Choose your path: North, South, East, or West, and face different enemies.
+- **Combat System:** Engage in turn-based combat.
 
 ## Gameplay Instructions
 
