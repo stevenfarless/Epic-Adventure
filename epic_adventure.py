@@ -76,13 +76,15 @@ def scenario(player, enemy, scenario_text):
         return "victory"
     else:
         if enemy.name == "Dragon":
-            print("The dragon's fire overwhelms you, and you retreat from the mountain...\n")
+            print("The dragon's fire leaves you badly burned. You retreat from the mountain to die in peace.\n")
         elif enemy.name == "Cave Troll":
-            print("The troll's brute strength overwhelms you, and you retreat from the cave...\n")
+            print("The troll's brute strength overwhelms you.\nYou attempt to retreat from the cave to die in peace, but you are trapped.\nYour bones join the pile of hundreds of other stupid...\nI mean...\nbrave...\nadventurers.")
         elif enemy.name == "Bear":
-            print("The bear's attack overwhelms you, and you retreat from the forest...\n")
+            print("The bear's attack overwhelms you.\nYou hear the bear say a prayer, thanking his bear deity for this delicious feast.\n")
+            input("[Press ENTER to say 'Amen']")
+            print("You can't talk. The bear ripped your throat out.\n\tBummer.")
         elif enemy.name == "Bandit Leader":
-            print("The dragon's fire overwhelms you, and you retreat from the mountain...\n")
+            print("The bandit leader lands his final blow. The bandits fight over who gets to keep your sweet loot.\nYou try to get up and retreat, but the bandits stole your feet.")
         input("[Continue]")
         return "game_over"
 
@@ -112,10 +114,10 @@ def main():
         "west": Enemy("Dragon", 200, 75)
     }
     scenarios = {
-        "north": "\nYou enter the dense forest.\nThe air is thick with the scent of pine and damp earth.\nAs you walk deeper, you hear rustling in the bushes.\nYou try to ignore it and decide to keep walking.\nBefore you can take another step, out lunges a wild bear!\nIt's hungry as heck and you look delicious!\n",
-        "east": "\nAs you head towards the distant village,\nfollowing the trail of smoke, you notice something alarming:\nthe village is under attack by a group of bandits!\nTheir leader gestures to his gang, and they quickly encircle you both.\nTheir chants of 'FIGHT! FIGHT! FIGHT!' echo through the air.",
-        "south": "\nYou enter the mysterious cave.\nThe air is cool and damp, with faint echoes bouncing off the walls.\nAs you venture deeper, you notice glowing crystals illuminating the path.\n",
-        "west": "\nYou start your ascent up the steep mountain path.\nThe higher you climb, the more breathtaking the view becomes.\nAfter a challenging climb, you reach a serene mountaintop lake.\n\nThe air grows suddenly cold.\nThe wind picks up, carrying a bone-chilling roar that echoes through the peaks. Your heart pounds as a colossal shadow blots out the sun. With a thunderous crash, a dragon descends from the swirling clouds, its scales gleaming ominously. Its piercing eyes lock onto you, and its wings cast a dark shadow over the lake. The ground trembles beneath its massive claws as it emits a low, rumbling growl.\n\nYou ready your weapon",
+        "north": "\n\tYou enter the dense forest.\nThe air is thick with the scent of pine and damp earth.\nAs you walk deeper, you hear rustling in the bushes.\nYou try to ignore it and decide to keep walking.\nBefore you can take another step, out lunges a wild bear!\nIt's hungry as heck and you look delicious!\n",
+        "east": "\n\tAs you head towards the distant village,\nfollowing the trail of smoke, you notice something alarming:\nthe village is under attack by a group of bandits!\n\tTheir leader gestures to his gang, and they quickly encircle you both.\nTheir chants of 'FIGHT! FIGHT! FIGHT!' echo through the air.",
+        "south": "\n\tYou enter the mysterious cave.\nThe air is cool and damp, with faint echoes bouncing off the walls.\nAs you venture deeper, you notice glowing crystals illuminating the path.\nYou start to feel uneasy, so you turn around to leave.\nYou turn and find yourself face to face with a troll!\n\t'Your bones will make a great addition to my collection!'",
+        "west": "\n\tYou start your ascent up the steep mountain path.\nThe higher you climb, the more breathtaking the view becomes.\nAfter a challenging climb, you reach a serene mountaintop lake.\n\tThe air grows suddenly cold.\nThe wind picks up, carrying a bone-chilling roar that echoes through the peaks. Your heart pounds as a colossal shadow blots out the sun. With a thunderous crash, a dragon descends from the swirling clouds, its scales gleaming ominously. Its piercing eyes lock onto you, and its wings cast a dark shadow over the lake. The ground trembles beneath its massive claws as it emits a low, rumbling growl.\n\nYou ready your weapon",
     }
     defeated_enemies = []
     while True:
