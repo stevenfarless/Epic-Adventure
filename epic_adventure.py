@@ -106,7 +106,7 @@ def scenario(player, enemy, scenario_text):
                   "\n\tBummer.")
         elif enemy.name == "Bandit Leader":
             print("The bandit leader lands his final blow. The bandits fight"
-                  "over who gets to keep your sweet loot.\nYou try to get up"
+                  " over who gets to keep your sweet loot.\nYou try to get up"
                   " and retreat, but the bandits stole your feet.")
         input("[Continue]")
         return "game_over"
@@ -114,7 +114,7 @@ def scenario(player, enemy, scenario_text):
 def main():
     print("""
     ***************************************************************************
-    ***************************************************************************
+    ********************************(DEV)**************************************
     ********************* Welcome to the Epic Adventure! **********************
     ***************************************************************************
     ***************************************************************************
