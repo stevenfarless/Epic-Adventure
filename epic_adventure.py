@@ -27,7 +27,7 @@ def fight_enemy(enemy, player):
     while enemy_health > 0 and player.health > 0:
         print(f"\n{player.name}'s health:\t{player.health}\n{enemy.name}'s"
               f"health:\t{enemy_health}")
-        choice = validate_input("1. Attack   2. Defend\n", ["1", "2"])
+        choice = validate_input("1. Attack   2. Defend\n> ", ["1", "2"])
         
         if choice == "1":
             player_attack = calculate_player_attack(enemy.attack_damage)
@@ -45,7 +45,7 @@ def fight_enemy(enemy, player):
             enemy_attack = calculate_enemy_attack(
                 MIN_DAMAGE, enemy.attack_damage)
             player.health -= enemy_attack
-            print(f"{enemy.name} attacked {player.name} and dealt"
+            print(f"The {enemy.name} attacked {player.name} and dealt"
                   f" {enemy_attack} damage!")
         
         elif choice == "2":
@@ -121,7 +121,7 @@ def main():
     """)
     input("Press Enter to continue...")
     
-    player = Player(input("\nWhat is your name? ").strip())
+    player = Player(input("\nWhat is your name?\n> ").strip())
     
     print(f"\nHello {player.name}.\n\nYou find yourself suddenly teleported to"
           " an unfamiliar crossroad surrounded by four different paths.\n")
@@ -175,16 +175,16 @@ def main():
             input("Press ENTER to end game and get back to your life, loser.")
             break
         direction = validate_input("Which direction will you choose? "
-                                   "(North / East / South / West)\n", 
+                                   "(North / East / South / West)\n> ", 
                                    enemies.keys())
         if direction not in defeated_enemies:
             result = scenario(player, enemies[direction], scenarios[direction])
             if result == "victory":
                 defeated_enemies.append(direction)
             elif result == "game_over":
-                print("Unfortunately, your adventure has come to an end.\n")
+                print("\nUnfortunately, your adventure has come to an end.\n")
                 input("Press ENTER to die.")
-                print("x_x You died.\n")
+                print("\nx_x You died.\n")
                 input("Exit")
                 break
 
