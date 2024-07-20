@@ -31,15 +31,17 @@ def fight_enemy(enemy, player):
         if choice == "1":
             player_attack = calculate_player_attack(enemy.attack_damage)
             enemy_health -= player_attack
-            print(f"\nYou attack the {enemy.name} and deal {player_attack} damage!")
+            print(f"\n{player.name} attacked the {enemy.name} and dealt {player_attack} damage!")
             
             if enemy_health <= 0:
-                print(f"\nThe {enemy.name} has been defeated! You rest and gain {HEALTH_GAIN} health!\n")
+                print(f"The {enemy.name} has been defeated! You rest and gain {HEALTH_GAIN} health!\n")
                 input("[Continue]")
                 player.health = min(player.health + HEALTH_GAIN, MAX_HEALTH)
                 return "victory"
             
-            player.health -= calculate_enemy_attack(MIN_DAMAGE, enemy.attack_damage)
+            enemy_attack = calculate_enemy_attack(MIN_DAMAGE, enemy.attack_damage)
+            player.health -= enemy_attack
+            print(f"{enemy.name} attacked {player.name} and dealt {enemy_attack} damage!")
         
         elif choice == "2":
             player.health -= calculate_defend_damage(MIN_DAMAGE, enemy.attack_damage)
