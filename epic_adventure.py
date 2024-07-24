@@ -24,35 +24,47 @@ def validate_input(prompt, valid_inputs):
 
 def fight_enemy(enemy, player):
     enemy_health = enemy.max_health
+
+    # Determine the width needed for the longest name plus the length of "'s health: "
+    name_width = max(len(player.name), len(enemy.name)) + len("'s health: ")
+
+    # Determine the width needed for the health value
+    health_width = 3 
+
     while enemy_health > 0 and player.health > 0:
-        print(f"\n{player.name}'s health:\t{player.health}\n{enemy.name}'s"
-              f"health:\t{enemy_health}")
+        # Calculate the total width for the formatted health strings to stay aligned
+        total_width = name_width + health_width
+
+        # Print player's and enemy's health with alignment
+        print(f"\n{player.name}'s health: {player.health:>{total_width - len(player.name) - len('s health: ')}}\n"
+              f"{enemy.name}'s health: {enemy_health:>{total_width - len(enemy.name) - len('s health: ')}}")
+
+        # Player input prompt: attack or defend
         choice = validate_input("1. Attack   2. Defend\n> ", ["1", "2"])
         
         if choice == "1":
+            # Player attacks
             player_attack = calculate_player_attack(enemy.attack_damage)
             enemy_health -= player_attack
-            print(f"\n{player.name} attacked the {enemy.name} and dealt"
-                  f" {player_attack} damage!")
+            print(f"\n{player.name} attacked the {enemy.name} and dealt {player_attack} damage!")
             
             if enemy_health <= 0:
-                print(f"The {enemy.name} has been defeated! You rest and gain "
-                      f"{HEALTH_GAIN} health!\n")
+                # Enemy defeated
+                print(f"The {enemy.name} has been defeated! You rest and gain {HEALTH_GAIN} health!\n")
                 input("[Continue]")
                 player.health = min(player.health + HEALTH_GAIN, MAX_HEALTH)
                 return "victory"
             
-            enemy_attack = calculate_enemy_attack(
-                MIN_DAMAGE, enemy.attack_damage)
+            # Enemy attacks back
+            enemy_attack = calculate_enemy_attack(MIN_DAMAGE, enemy.attack_damage)
             player.health -= enemy_attack
-            print(f"The {enemy.name} attacked {player.name} and dealt"
-                  f" {enemy_attack} damage!")
+            print(f"The {enemy.name} attacked {player.name} and dealt {enemy_attack} damage!")
         
         elif choice == "2":
-            player.health -= calculate_defend_damage(
-                MIN_DAMAGE, enemy.attack_damage)
+            # Player defends
+            player.health -= calculate_defend_damage(MIN_DAMAGE, enemy.attack_damage)
         
-        # Ensure player health doesn't drop below zero unexpectedly
+        # Game over if player's health drops to zero or below
         if player.health <= 0:
             return "game_over"
     
