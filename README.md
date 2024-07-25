@@ -17,22 +17,4 @@ In this text-based adventure game, you, the player, will navigate through differ
 2. **Combat:** Fight enemies using the attack or defend options.
 3. **Navigation:** Explore different locations and defeat all enemies to win the game.
 
-## How to Play
-
-To run the game locally:
-
-1. Clone this repository:\
-git clone https://github.com/Fuddledumpy/epic-adventure.git
-
-2. Navigate into the project directory:\
-cd epic-adventure
-
-4. Run the game:\
-python epic-adventure.py
-
-
-## Credits
-
-- Created by Fuddledumpy
-
 Enjoy the adventure!
