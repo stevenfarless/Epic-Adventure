@@ -4,16 +4,19 @@ MAX_HEALTH = 100
 MIN_DAMAGE = 5
 HEALTH_GAIN = 10
 
+
 class Player:
     def __init__(self, name):
         self.name = name
         self.health = MAX_HEALTH
+
 
 class Enemy:
     def __init__(self, name, max_health, attack_damage):
         self.name = name
         self.max_health = max_health
         self.attack_damage = attack_damage
+
 
 def validate_input(prompt, valid_inputs):
     while True:
@@ -22,6 +25,7 @@ def validate_input(prompt, valid_inputs):
             return choice
         print("Invalid input. Please try again.")
 
+
 def fight_enemy(enemy, player):
     enemy_health = enemy.max_health
 
@@ -29,7 +33,7 @@ def fight_enemy(enemy, player):
     name_width = max(len(player.name), len(enemy.name)) + len("'s health: ")
 
     # Determine the width needed for the health value
-    health_width = 3 
+    health_width = 3
 
     while enemy_health > 0 and player.health > 0:
         # Calculate the total width for the formatted health strings to stay aligned
@@ -41,50 +45,59 @@ def fight_enemy(enemy, player):
 
         # Player input prompt: attack or defend
         choice = validate_input("1. Attack   2. Defend\n> ", ["1", "2"])
-        
+
         if choice == "1":
             # Player attacks
             player_attack = calculate_player_attack(enemy.attack_damage)
             enemy_health -= player_attack
-            print(f"\n{player.name} attacked the {enemy.name} and dealt {player_attack} damage!")
-            
+            print(f"\n{player.name} attacked the {
+                  enemy.name} and dealt {player_attack} damage!")
+
             if enemy_health <= 0:
                 # Enemy defeated
-                print(f"The {enemy.name} has been defeated! You rest and gain {HEALTH_GAIN} health!\n")
+                print(f"The {enemy.name} has been defeated! You rest and gain {
+                      HEALTH_GAIN} health!\n")
                 input("[Continue]")
                 player.health = min(player.health + HEALTH_GAIN, MAX_HEALTH)
                 return "victory"
-            
+
             # Enemy attacks back
-            enemy_attack = calculate_enemy_attack(MIN_DAMAGE, enemy.attack_damage)
+            enemy_attack = calculate_enemy_attack(
+                MIN_DAMAGE, enemy.attack_damage)
             player.health -= enemy_attack
-            print(f"The {enemy.name} attacked {player.name} and dealt {enemy_attack} damage!")
-        
+            print(f"The {enemy.name} attacked {
+                  player.name} and dealt {enemy_attack} damage!")
+
         elif choice == "2":
             # Player defends
-            player.health -= calculate_defend_damage(MIN_DAMAGE, enemy.attack_damage)
-        
+            player.health -= calculate_defend_damage(
+                MIN_DAMAGE, enemy.attack_damage)
+
         # Game over if player's health drops to zero or below
         if player.health <= 0:
             return "game_over"
-    
+
     return None
+
 
 def calculate_player_attack(max_damage):
     return random.randint(max_damage // 2, max_damage)
 
+
 def calculate_enemy_attack(min_damage, max_damage):
     return random.randint(min_damage, max_damage // 2)
 
+
 def calculate_defend_damage(min_damage, max_damage):
-    return max(0, random.randint(min_damage, max_damage // 2) - 
+    return max(0, random.randint(min_damage, max_damage // 2) -
                random.randint(MIN_DAMAGE, max_damage // 3))
+
 
 def scenario(player, enemy, scenario_text):
     print(scenario_text)
     input("[Continue]")
     result = fight_enemy(enemy, player)
-    
+
     print("")
     if result == "victory":
         if enemy.name == "Dragon":
@@ -123,6 +136,7 @@ def scenario(player, enemy, scenario_text):
         input("[Continue]")
         return "game_over"
 
+
 def main():
     print("""
     ***************************************************************************
@@ -132,9 +146,9 @@ def main():
     ***************************************************************************
     """)
     input("Press Enter to continue...")
-    
+
     player = Player(input("\nWhat is your name?\n> ").strip())
-    
+
     print(f"\nHello {player.name}.\n\nYou find yourself suddenly teleported to"
           " an unfamiliar crossroad surrounded by four different paths.\n")
     print("To the North:\tYou see a dense forest stretching as far as the"
@@ -144,7 +158,7 @@ def main():
           " an eerie glow.")
     print("To the West:\tYou see a narrow path leading up a steep mountain.\n")
     # input("[Continue]")
-    
+
     enemies = {
         "north": Enemy("Bear", 50, 20),
         "east": Enemy("Bandit Leader", 65, 30),
@@ -187,7 +201,7 @@ def main():
             input("Press ENTER to end game and get back to your life, loser.")
             break
         direction = validate_input("Which direction will you choose? "
-                                   "(North / East / South / West)\n> ", 
+                                   "(North / East / South / West)\n> ",
                                    enemies.keys())
         if direction not in defeated_enemies:
             result = scenario(player, enemies[direction], scenarios[direction])
@@ -199,6 +213,7 @@ def main():
                 print("\nx_x You died.\n")
                 input("Exit")
                 break
+
 
 if __name__ == "__main__":
     main()
