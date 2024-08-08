@@ -68,10 +68,14 @@ def fight_enemy(enemy, player):
             print(f"The {enemy.name} attacked {
                   player.name} and dealt {enemy_attack} damage!")
 
+        # Player defends
         elif choice == "2":
-            # Player defends
-            player.health -= calculate_defend_damage(
+            # Calculate amount of damage player takes while defending.
+            damage_taken = calculate_defend_damage(
                 MIN_DAMAGE, enemy.attack_damage)
+            player.health -= damage_taken
+            print(f"\n{player.name} braced for the attack and took "
+                  f"{damage_taken} damage.")
 
         # Game over if player's health drops to zero or below
         if player.health <= 0:
