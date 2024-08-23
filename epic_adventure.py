@@ -50,13 +50,11 @@ def fight_enemy(enemy, player):
             # Player attacks
             player_attack = calculate_player_attack(enemy.attack_damage)
             enemy_health -= player_attack
-            print(f"\n{player.name} attacked the {
-                  enemy.name} and dealt {player_attack} damage!")
+            print(f"\n{player.name} attacked the {enemy.name} and dealt {player_attack} damage!")
 
             if enemy_health <= 0:
                 # Enemy defeated
-                print(f"The {enemy.name} has been defeated! You rest and gain {
-                      HEALTH_GAIN} health!\n")
+                print(f"The {enemy.name} has been defeated! You rest and gain {HEALTH_GAIN} health!\n")
                 input("[Continue]")
                 player.health = min(player.health + HEALTH_GAIN, MAX_HEALTH)
                 return "victory"
@@ -65,8 +63,7 @@ def fight_enemy(enemy, player):
             enemy_attack = calculate_enemy_attack(
                 MIN_DAMAGE, enemy.attack_damage)
             player.health -= enemy_attack
-            print(f"The {enemy.name} attacked {
-                  player.name} and dealt {enemy_attack} damage!")
+            print(f"The {enemy.name} attacked {player.name} and dealt {enemy_attack} damage!")
 
         # Player defends
         elif choice == "2":
