@@ -1,26 +1,58 @@
 import random
+import os
 
 MAX_HEALTH = 100
 PLAYER_BASE_ATTACK = 15
 PLAYER_BASE_DEFENSE = 5
 
 
+def clear_screen():
+    """Clear the terminal screen"""
+    print('\n' * 50)
+
+
 class Player:
-    def __init__(self, name):
+    def __init__(self, name, difficulty):
         self.name = name
-        self.health = MAX_HEALTH
-        self.attack = PLAYER_BASE_ATTACK
-        self.defense = PLAYER_BASE_DEFENSE
+        self.difficulty = difficulty
+        
+        # Adjust stats based on difficulty
+        if difficulty == "easy":
+            self.health = MAX_HEALTH + 30  # 130 health
+            self.attack = PLAYER_BASE_ATTACK + 5  # 20 attack
+            self.defense = PLAYER_BASE_DEFENSE + 3  # 8 defense
+        elif difficulty == "medium":
+            self.health = MAX_HEALTH  # 100 health
+            self.attack = PLAYER_BASE_ATTACK  # 15 attack
+            self.defense = PLAYER_BASE_DEFENSE  # 5 defense
+        else:  # hard
+            self.health = MAX_HEALTH - 20  # 80 health
+            self.attack = PLAYER_BASE_ATTACK - 3  # 12 attack
+            self.defense = PLAYER_BASE_DEFENSE - 2  # 3 defense
+        
+        self.max_health = self.health
         self.level = 1
 
 
 class Enemy:
-    def __init__(self, name, max_health, attack, defense, aggression):
+    def __init__(self, name, max_health, attack, defense, aggression, difficulty):
         self.name = name
-        self.max_health = max_health
-        self.attack = attack
-        self.defense = defense
-        self.aggression = aggression  # how aggressive the enemy is (0-100)
+        
+        # Adjust enemy stats based on difficulty
+        if difficulty == "easy":
+            self.max_health = int(max_health * 0.7)  # 30% weaker
+            self.attack = int(attack * 0.75)
+            self.defense = int(defense * 0.7)
+        elif difficulty == "medium":
+            self.max_health = max_health
+            self.attack = attack
+            self.defense = defense
+        else:  # hard
+            self.max_health = int(max_health * 1.4)  # 40% stronger
+            self.attack = int(attack * 1.3)
+            self.defense = int(defense * 1.3)
+        
+        self.aggression = aggression
 
 
 def validate_input(prompt, valid_inputs):
@@ -32,40 +64,30 @@ def validate_input(prompt, valid_inputs):
 
 
 def calculate_damage(attacker_power, defender_defense):
-    # Calculate base damage with defender's defense reducing it
     base_damage = attacker_power - (defender_defense // 2)
-    # Add some randomness so damage isn't the same every time
     variance = random.randint(
         int(base_damage * 0.85), 
         int(base_damage * 1.15)
     )
-    # Ensure player always does at least some damage
     if variance < 3:
         variance = 3
     return variance
 
 
 def enemy_choose_action(enemy, enemy_health):
-    # Figure out what the enemy wants to do based on how much 
-    # health they have left
     health_percent = (enemy_health / enemy.max_health) * 100
     
-    # Healthy enemies fight more aggressively
     if health_percent > 60:
         attack_chance = enemy.aggression
         defend_chance = 100 - enemy.aggression
-    # Wounded enemies are more cautious
     elif health_percent > 30:
         attack_chance = enemy.aggression * 0.7
         defend_chance = 100 - attack_chance
-    # Low health makes enemies either desperate or defensive
     else:
         if enemy.aggression > 70:
-            # Aggressive enemies go all in when desperate
             attack_chance = 90
             defend_chance = 10
         else:
-            # Cautious enemies defend more
             attack_chance = 30
             defend_chance = 70
     
@@ -78,15 +100,15 @@ def enemy_choose_action(enemy, enemy_health):
 
 def fight_enemy(enemy, player):
     enemy_health = enemy.max_health
-    # Calculate spacing for health display
     name_width = (max(len(player.name), len(enemy.name)) + 
                   len("'s health: "))
     health_width = 3
 
     while enemy_health > 0 and player.health > 0:
+        clear_screen()
+        
         total_width = name_width + health_width
         
-        # Show current health for both
         player_spacing = (total_width - len(player.name) - 
                          len('s health: '))
         enemy_spacing = (total_width - len(enemy.name) - 
@@ -97,13 +119,18 @@ def fight_enemy(enemy, player):
         print(f"{enemy.name}'s health: "
               f"{enemy_health:>{enemy_spacing}}")
 
-        # Get player choice
         choice = validate_input("1. Attack   2. Defend\n> ", 
                                ["1", "2"])
-        # Enemy makes their own choice
+        
+        clear_screen()
+        
+        print(f"\n{player.name}'s health: "
+              f"{player.health:>{player_spacing}}")
+        print(f"{enemy.name}'s health: "
+              f"{enemy_health:>{enemy_spacing}}\n")
+        
         enemy_action = enemy_choose_action(enemy, enemy_health)
 
-        # Handle when both sides attack
         if choice == "1" and enemy_action == "attack":
             player_damage = calculate_damage(player.attack, 
                                             enemy.defense)
@@ -111,15 +138,27 @@ def fight_enemy(enemy, player):
                                            player.defense)
             
             enemy_health -= player_damage
-            print(f"\n{player.name} attacked and dealt "
+            print(f"{player.name} attacked and dealt "
                   f"{player_damage} damage!")
             
-            # Check if enemy died
             if enemy_health <= 0:
                 print(f"The {enemy.name} has been defeated! "
                       f"You gain experience and rest!\n")
-                player.health = min(player.health + 15, MAX_HEALTH)
-                player.attack += 2
+                
+                # Difficulty affects health recovery
+                if player.difficulty == "easy":
+                    health_recovery = 25
+                    attack_gain = 3
+                elif player.difficulty == "medium":
+                    health_recovery = 15
+                    attack_gain = 2
+                else:  # hard
+                    health_recovery = 10
+                    attack_gain = 1
+                
+                player.health = min(player.health + health_recovery, 
+                                   player.max_health)
+                player.attack += attack_gain
                 player.level += 1
                 input("[Continue]")
                 return "victory"
@@ -128,7 +167,6 @@ def fight_enemy(enemy, player):
             print(f"The {enemy.name} attacked back and dealt "
                   f"{enemy_damage} damage!")
 
-        # Player attacks but enemy blocks
         elif choice == "1" and enemy_action == "defend":
             player_damage = calculate_damage(player.attack, 
                                             enemy.defense)
@@ -138,7 +176,7 @@ def fight_enemy(enemy, player):
             enemy_health -= reduced_damage
             player.health -= counter_damage
             
-            print(f"\n{player.name} attacked for "
+            print(f"{player.name} attacked for "
                   f"{player_damage} damage!")
             print(f"The {enemy.name} raised its guard and blocked "
                   f"most of it! Only took {reduced_damage} damage.")
@@ -148,13 +186,24 @@ def fight_enemy(enemy, player):
             if enemy_health <= 0:
                 print(f"The {enemy.name} has been defeated! "
                       f"You gain experience and rest!\n")
-                player.health = min(player.health + 15, MAX_HEALTH)
-                player.attack += 2
+                
+                if player.difficulty == "easy":
+                    health_recovery = 25
+                    attack_gain = 3
+                elif player.difficulty == "medium":
+                    health_recovery = 15
+                    attack_gain = 2
+                else:
+                    health_recovery = 10
+                    attack_gain = 1
+                
+                player.health = min(player.health + health_recovery, 
+                                   player.max_health)
+                player.attack += attack_gain
                 player.level += 1
                 input("[Continue]")
                 return "victory"
 
-        # Player blocks, enemy attacks
         elif choice == "2" and enemy_action == "attack":
             enemy_damage = calculate_damage(enemy.attack, 
                                            player.defense)
@@ -164,34 +213,36 @@ def fight_enemy(enemy, player):
             player.health -= reduced_damage
             enemy_health -= counter_damage
             
-            print(f"\n{player.name} raised their guard!")
+            print(f"{player.name} raised their guard!")
             print(f"The {enemy.name} attacked for {enemy_damage} "
                   f"damage, but you blocked most of it!")
             print(f"You took {reduced_damage} damage and countered "
                   f"for {counter_damage} damage!")
 
-        # Both defend
         else:
-            print(f"\n{player.name} and the {enemy.name} both brace "
+            print(f"{player.name} and the {enemy.name} both brace "
                   f"for impact!")
             print(f"You circle each other warily. Both take 2 damage "
                   f"from exhaustion.")
             player.health -= 2
             enemy_health -= 2
 
-        # Check if player died
         if player.health <= 0:
+            input("[Continue]")
             return "game_over"
+        
+        input("[Continue]")
 
     return None
 
 
 def scenario(player, enemy, scenario_text):
+    clear_screen()
     print(scenario_text)
     input("[Continue]")
     result = fight_enemy(enemy, player)
 
-    print("")
+    clear_screen()
     if result == "victory":
         if enemy.name == "Dragon":
             print("Filled with adrenaline from defeating the dragon, "
@@ -205,6 +256,7 @@ def scenario(player, enemy, scenario_text):
         elif enemy.name == "Bandit Leader":
             print("With the bandit leader defeated, the villagers "
                   "thank you and you continue your journey.\n")
+        input("[Continue]")
         return "victory"
     else:
         if enemy.name == "Dragon":
@@ -233,6 +285,7 @@ def scenario(player, enemy, scenario_text):
 
 
 def main():
+    clear_screen()
     print("""
     *******************************************
     *******************************************
@@ -242,8 +295,23 @@ def main():
     """)
     input("Press Enter to continue...")
 
-    player = Player(input("\nWhat is your name?\n> ").strip())
+    # Difficulty selection
+    clear_screen()
+    print("\n" + "="*50)
+    print("SELECT YOUR DIFFICULTY:")
+    print("="*50)
+ 
+   
+    difficulty = validate_input(
+        "\nChoose your difficulty (Easy / Medium / Hard)\n> ",
+        ["easy", "medium", "hard"]
+    )
+    
+    print(f"  Difficulty set to: {difficulty.upper()}")
 
+    player = Player(input("\nWhat is your name?\n> ").strip(), difficulty)
+
+    clear_screen()
     print(f"\nHello {player.name}.\n\n"
           f"You find yourself suddenly teleported to an unfamiliar "
           f"crossroad surrounded by four different paths.\n")
@@ -256,12 +324,12 @@ def main():
           "mountain.\n")
 
     # Setup the enemies with their stats
-    # Stats are: name, health, attack, defense, aggression(0-100)
+    # Stats are: name, health, attack, defense, aggression(0-100), difficulty
     enemies = {
-        "north": Enemy("Bear", 50, 15, 3, 75),  # Fast but weak
-        "east": Enemy("Bandit Leader", 70, 18, 5, 60),  # Balanced
-        "south": Enemy("Cave Troll", 90, 22, 8, 85),  # TankY & hits hard
-        "west": Enemy("Dragon", 150, 28, 10, 50)  # Boss - plays smart
+        "north": Enemy("Bear", 50, 15, 3, 75, difficulty),
+        "east": Enemy("Bandit Leader", 70, 18, 5, 60, difficulty),
+        "south": Enemy("Cave Troll", 90, 22, 8, 85, difficulty),
+        "west": Enemy("Dragon", 150, 28, 10, 50, difficulty)
     }
     
     scenarios = {
@@ -319,14 +387,28 @@ def main():
     
     # Main game loop
     while True:
-        # Check if player beat everything
         if len(defeated_enemies) == len(enemies):
+            clear_screen()
             print(f"\nCongratulations {player.name}!!! You have "
                   f"defeated all the enemies and completed the epic "
-                  f"adventure!\n")
+                  f"adventure on {difficulty.upper()} mode!\n")
             input("Press ENTER to end game and get back to your life, "
                   "loser.")
             break
+        
+        clear_screen()
+        print(f"\nHello {player.name}.\n\n"
+              f"You find yourself at the crossroad surrounded by four different paths.\n")
+        print("To the North:\tYou see a dense forest stretching as far "
+              "as the eye can see.")
+        print("To the East:\tYou see smoke rising from a distant village.")
+        print("To the South:\tYou see a mysterious cave entrance beckoning "
+              "with an eerie glow.")
+        print("To the West:\tYou see a narrow path leading up a steep "
+              "mountain.\n")
+        
+        if defeated_enemies:
+            print(f"Defeated enemies: {', '.join(defeated_enemies)}\n")
             
         direction = validate_input(
             "Which direction will you choose? "
@@ -334,13 +416,13 @@ def main():
             enemies.keys()
         )
         
-        # Only fight if they haven't beaten this enemy yet
         if direction not in defeated_enemies:
             result = scenario(player, enemies[direction], 
                             scenarios[direction])
             if result == "victory":
                 defeated_enemies.append(direction)
             elif result == "game_over":
+                clear_screen()
                 print("\nUnfortunately, your adventure has come to "
                       "an end.\n")
                 input("Press ENTER to die.")
@@ -351,4 +433,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
