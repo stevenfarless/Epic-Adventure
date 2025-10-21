@@ -75,6 +75,10 @@ def calculate_damage(attacker_power, defender_defense):
 
 
 def enemy_choose_action(enemy, enemy_health):
+    # Special case for the rock - it never attacks!
+    if enemy.name == "Rock":
+        return "defend"
+    
     health_percent = (enemy_health / enemy.max_health) * 100
     
     if health_percent > 60:
@@ -256,6 +260,11 @@ def scenario(player, enemy, scenario_text):
         elif enemy.name == "Bandit Leader":
             print("With the bandit leader defeated, the villagers "
                   "thank you and you continue your journey.\n")
+        elif enemy.name == "Rock":
+            print("The rock crumbles into dust.\n"
+                  "Robert looks at you with concern.\n"
+                  "'You okay, buddy?' he asks.\n"
+                  "You feel strangely satisfied.\n")
         input("[Continue]")
         return "victory"
     else:
@@ -280,6 +289,11 @@ def scenario(player, enemy, scenario_text):
                   "fight over who gets to keep your sweet loot.\n"
                   "You try to get up and retreat, but the bandits "
                   "stole your feet.")
+        elif enemy.name == "Rock":
+            print("You somehow died fighting a rock.\n"
+                  "A ROCK.\n"
+                  "Robert will never let you live this down.\n"
+                  "...Oh wait, you're dead.\n")
         input("[Continue]")
         return "game_over"
 
@@ -312,17 +326,10 @@ def main():
     player = Player(input("\nWhat is your name?\n> ").strip(), difficulty)
 
     clear_screen()
-    print(f"\nHello {player.name}.\n\n"
-          f"You find yourself suddenly teleported to an unfamiliar "
-          f"crossroad surrounded by four different paths.\n")
-    print("To the North:\tYou see a dense forest stretching as far "
-          "as the eye can see.")
-    print("To the East:\tYou see smoke rising from a distant village.")
-    print("To the South:\tYou see a mysterious cave entrance beckoning "
-          "with an eerie glow.")
-    print("To the West:\tYou see a narrow path leading up a steep "
-          "mountain.\n")
-
+    
+    # Check if player name is Marcus (case insensitive)
+    is_marcus = player.name.lower() == "marcus"
+    
     # Setup the enemies with their stats
     # Stats are: name, health, attack, defense, aggression(0-100), difficulty
     enemies = {
@@ -383,6 +390,38 @@ def main():
         ),
     }
     
+    # Add Campfire easter egg if player name is Marcus
+    if is_marcus:
+        enemies["campfire"] = Enemy("Rock", 500, 0, 0, 0, difficulty)
+        scenarios["campfire"] = (
+            "\n\tYou are sitting around a campfire, just living your best wormy "
+            "acetomenotistic life with your best friend Robert. You notice something "
+            "is off but you can't put your freakishly long finger on it. After a brief "
+            "moment of hypervigilance, something catches your big ol' eye. There's "
+            "something about that rock. That rock right there. It's... It's... "
+            "IT'S PISSING YOU OFF! You tell Robert but he is of little help. You are "
+            "left with no other choice than to give that stupid smug little stupid smug "
+            "rock a piece of your mind.\n"
+        )
+    
+    # Build the valid direction inputs
+    valid_directions = list(enemies.keys())
+    
+    # Display initial crossroad
+    print(f"\nHello {player.name}.\n\n"
+          f"You find yourself suddenly teleported to an unfamiliar "
+          f"crossroad surrounded by {'five' if is_marcus else 'four'} different paths.\n")
+    print("To the North:\tYou see a dense forest stretching as far "
+          "as the eye can see.")
+    print("To the East:\tYou see smoke rising from a distant village.")
+    print("To the South:\tYou see a mysterious cave entrance beckoning "
+          "with an eerie glow.")
+    print("To the West:\tYou see a narrow path leading up a steep "
+          "mountain.\n")
+    
+    if is_marcus:
+        print("To the Campfire:\tYou see a cozy campfire with your best friend Robert.\n")
+    
     defeated_enemies = []
     
     # Main game loop
@@ -398,7 +437,7 @@ def main():
         
         clear_screen()
         print(f"\nHello {player.name}.\n\n"
-              f"You find yourself at the crossroad surrounded by four different paths.\n")
+              f"You find yourself at the crossroad surrounded by {'five' if is_marcus else 'four'} different paths.\n")
         print("To the North:\tYou see a dense forest stretching as far "
               "as the eye can see.")
         print("To the East:\tYou see smoke rising from a distant village.")
@@ -407,14 +446,20 @@ def main():
         print("To the West:\tYou see a narrow path leading up a steep "
               "mountain.\n")
         
+        if is_marcus:
+            print("To the Campfire:\tYou see a cozy campfire with your best friend Robert.\n")
+        
         if defeated_enemies:
             print(f"Defeated enemies: {', '.join(defeated_enemies)}\n")
+        
+        # Build prompt based on available directions
+        direction_prompt = "Which direction will you choose? "
+        if is_marcus:
+            direction_prompt += "(North / East / South / West / Campfire)\n> "
+        else:
+            direction_prompt += "(North / East / South / West)\n> "
             
-        direction = validate_input(
-            "Which direction will you choose? "
-            "(North / East / South / West)\n> ", 
-            enemies.keys()
-        )
+        direction = validate_input(direction_prompt, valid_directions)
         
         if direction not in defeated_enemies:
             result = scenario(player, enemies[direction], 
