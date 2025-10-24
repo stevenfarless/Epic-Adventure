@@ -249,6 +249,40 @@ MARCUS_ROCK_ENCOUNTER = EncounterConfig(
 )
 
 
+
+ROBERT_CAMPFIRE_ENCOUNTER = EncounterConfig(
+    name="Marcus's Sanity",
+    base_health=1,  # Doesn't matter, we'll handle this specially
+    base_attack=0,
+    base_defense=0,
+    aggression=0,
+    crossroad_description=(
+        "To the Campfire:\tYou see a cozy campfire with your best friend Marcus."
+    ),
+    intro_text=(
+        "\n\tYou're relaxing by a warm campfire with your best friend Marcus, roasting marshmallows and enjoying the peaceful evening. "
+        "The stars twinkle overhead, the fire crackles gently... it's perfect.\n\n"
+        "\tThen Marcus stands up.\n\n"
+        "He walks over to a nearby rock. A perfectly innocent rock. Without a word, without warning, "
+        "\"Robert...\" Marcus mutters, \"I don't like that rock\"\n\n"
+        "he raises his fist and slams it down onto the rock with the fury of a thousand suns.\n\n"
+        "\"Take that, you smug little pebble!\" he says calm and monotone.\n\n"
+        "You watch in stunned silence as Marcus proceeds to beat the everloving heck out of this poor innocent rock."
+        "His fists are a blur. The rock doesn't stand a chance. Chunks of stone fly in every direction.\n\n"
+        "\"It's pissing me off.\" Marcus mutters in his trademark sociopathic wormitude.\n\n"
+        # "In a blind fit of the calmest, slowest, most uneccessary rage, he dives face first directly into the campfire.\n"
+    ),
+    victory_text=(
+        "Marcus crawls out of the fire, singed but alive. He's coughing up smoke and his eyebrows are gone. Or did he even have any to begin with?\n"
+        "\"Thanks... Robert\" he wheezes. \"You saved my life. That rock had it coming though.\"\n"
+        "You both agree to never speak of this again. The adventure continues.\n"
+    ),
+    defeat_text=(
+        "You couldn't save him. Marcus remains in the fire, a monument to poor decision-making and rock-related rage.\n"
+        "You continue your adventure alone, forever haunted by the memory of your friend's final words: \"It's pissing me off.\"\n"
+    ),
+)
+
 def validate_input(prompt: str, valid_inputs: List[str]) -> str:
     """Prompt the user until they supply a value contained in ``valid_inputs``."""
 
@@ -444,6 +478,89 @@ def player_defend_round(
     return enemy_health, messages
 
 
+
+def robert_watch_marcus_fight(player: Player) -> Optional[str]:
+    """Special encounter where Robert watches Marcus fight a rock and throw himself in a fire."""
+    help_attempts = 0
+    marcus_phrases = [
+        "\"Help me... Robert...\"",
+        "\"Robert... This hurts worse than getting shanked in the leg by Big Badinky Bones at Panera Bread.\"",
+        "\"Robert... Why did you allow me to yeet myself into this fire?\"",
+        "\"Robert... This fire is pissing me off.\""
+    ]
+
+    # Phase 1: Watch Marcus beat up the rock
+    clear_screen()
+    print("\nMarcus is absolutely destroying this rock. Pebbles everywhere.\n")
+    print("His knuckles are bleeding. The rock is 50% dust now. He's not stopping.\n")
+    input("[Continue]")
+
+    clear_screen()
+    print("\nThe rock is now gravel. Marcus raises his arms in triumph.\n")
+    print('\"Victory...\" he says calmly and monotone to the heavens.\n')
+    print("\nThen... he looks at the campfire.\n")
+    input("[Continue]")
+
+    clear_screen()
+    print("\n\"The rock... it made me do terrible things,\" Marcus says.\n")
+    print('\"There\'s only one way to cleanse this guilt...\"\n')
+    print("\nBefore you can stop him, in a blind fit of the calmest, slowest, most uneccessary rage, he dives face first directly into the campfire.\n")
+    input("[Continue]")
+
+    # Phase 2: The rescue attempts
+    while help_attempts < 3:
+        clear_screen()
+        if help_attempts == 0:
+            print("\nMarcus is rolling around in the fire, screaming for help.\n")
+            print("The flames are everywhere. This is a disaster.\n")
+        elif help_attempts == 1:
+            print("\nMarcus is still in the fire. He's doing this weird flailing thing.\n")
+            print("Is he... is he swimming in the fire? That's not helping, Marcus.\n")
+        else:
+            print("\nMarcus has given up flailing. He's just lying there dramatically.\n")
+            print("But he's still saying Robert. So at least he's alive.\n")
+
+        print(f"\nMarcus: {marcus_phrases[help_attempts]}\n")
+
+        choice = validate_input("1. Help Marcus\n2. Tell him to get out\n> ", ["1", "2"])
+
+        clear_screen()
+
+        if choice == "1":
+            help_attempts += 1
+            if help_attempts < 3:
+                print("\nYou reach toward the fire to help Marcus!\n")
+                print("\nBut the heat is too intense! You pull back, singed.\n")
+                print("Marcus continues writhing in the flames.\n")
+                # print('\"I CAN SEE MY ANCESTORS! THEY\'RE DISAPPOINTED!\" Marcus wails.\n')
+                input("[Continue]")
+            else:
+                # Success!
+                print("\nWith a heroic burst of determination, you grab a nearby branch!\n")
+                print("You extend it to Marcus. He grabs hold!\n")
+                print("\nWith a mighty heave, you YANK Marcus out of the fire!\n")
+                print("He tumbles onto the ground, smoking and coughing.\n")
+                input("[Continue]")
+
+                clear_screen()
+                print('\nMarcus looks up at you with tears in his eyes.\n')
+                print('\"That rock... it was so smug, Robert. So smug.\"\n')
+                print("\nYou help him to his feet. His hair is mostly gone.\n")
+                print('\"We don\'t talk about this,\" you say firmly.\n')
+                print('\"Agreed,\" Marcus nods. \"What rock?\"\n')
+                input("[Continue]")
+
+                return "victory"
+        else:  # choice == "2"
+            print("\n\"Marcus, just GET OUT!\" you yell.\n")
+            print("\nMarcus looks at you from the flames.\n")
+            print(f"\nMarcus: {marcus_phrases[min(help_attempts, len(marcus_phrases)-1)]}\n")
+            print("\nYeah, that's not working.\n")
+            input("[Continue]")
+
+    return "victory"
+
+
 def fight_enemy(enemy: Enemy, player: Player) -> Optional[str]:
     enemy_health = enemy.max_health
     status_width = calculate_status_width(player, enemy)
@@ -493,16 +610,26 @@ def fight_enemy(enemy: Enemy, player: Player) -> Optional[str]:
 
 def scenario(player: Player, encounter: EncounterConfig) -> Optional[str]:
     """Play through a single encounter and return the resulting state."""
+    # Special handling for Robert's campfire encounter
+    if encounter.name == "Marcus's Sanity":
+        clear_screen()
+        print(encounter.intro_text)
+        input("[Continue]")
+        result = robert_watch_marcus_fight(player)
+        clear_screen()
+        if result == "victory":
+            print(encounter.victory_text)
+            input("[Continue]")
+        return result
 
     enemy = Enemy.from_config(encounter, player.difficulty)
-
     clear_screen()
     print(encounter.intro_text)
     input("[Continue]")
+
     result = fight_enemy(enemy, player)
 
     clear_screen()
-
     if result == "victory":
         print(encounter.victory_text)
         input("[Continue]")
@@ -551,10 +678,13 @@ def main() -> None:
     clear_screen()
 
     is_marcus = player.name.lower() == "marcus"
+    is_robert = player.name.lower() == "robert"
 
     encounters: EncounterMap = dict(BASE_ENCOUNTERS)
     if is_marcus:
         encounters["campfire"] = MARCUS_ROCK_ENCOUNTER
+    if is_robert:
+        encounters["campfire"] = ROBERT_CAMPFIRE_ENCOUNTER
 
     defeated_enemies: List[str] = []
     first_visit = True
