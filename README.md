@@ -21,7 +21,7 @@ A simple terminal-based, text adventure game. Navigate branching paths, face dis
    # or: python epic_adventure.py
    ```
 2. Choose a **difficulty** (Easy / Medium / Hard).
-3. Enter your **name**. *(Try “Marcus” for a fun easter egg.)*
+3. Enter your **name**.
 4. From the crossroads, **pick a direction** and survive the fights using:
 
    * `1` = **Attack** — deals damage; enemy may attack or defend
@@ -38,7 +38,7 @@ Winning grants **health + attack rewards** and levels you up. Defeat ends the ru
 * **Enemy AI**: weighted “attack vs defend” choice based on remaining HP and aggression.
 * **Damage Model**: variable damage band, minimum chip damage, and block/counter behavior.
 * **Progression**: post-battle recovery + attack increment; `level` increases after victories.
-* **Easter egg**: entering the name `marcus` unlocks the Rock at the campfire.
+* **Easter egg**: entering the name a certain TikTok worm character unlocks a special mission.
 
 ---
 
@@ -76,7 +76,7 @@ BASE_ENCOUNTERS["northeast"] = EncounterConfig(
 )
 ```
 
-> The crossroad menu is auto-built from the keys of `BASE_ENCOUNTERS` (plus the campfire encounter when the player name is `marcus`). No extra wiring needed.
+> The crossroad menu is auto-built from the keys of `BASE_ENCOUNTERS`. No extra wiring needed.
 
 ### Tweak difficulty
 
